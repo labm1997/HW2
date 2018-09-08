@@ -3,11 +3,18 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.all_ratings
   	
-  	orderHash = {nil => "", "title_header" => "title ASC", "release_date_header" => "release_date ASC"}
+  	orderHash = {"title_header" => "title ASC", "release_date_header" => "release_date ASC"}
   	
-  	@selectedRatings = params[:ratings].class == ActionController::Parameters ? params[:ratings].keys : @all_ratings
+  	@order = orderHash[params[:id]] || session[:sort] || ""
   	
-    @movies = Movie.where(:rating => @selectedRatings).order(orderHash[params[:id]])
+  	ratings = params[:ratings].class == ActionController::Parameters ? params[:ratings].keys : nil
+  	
+  	@selectedRatings = ratings || session[:ratings] || @all_ratings
+  	
+    @movies = Movie.where(:rating => @selectedRatings).order(@order)
+  	
+  	session[:ratings] = @selectedRatings
+  	session[:sort] = @order
   end
 
   def show
