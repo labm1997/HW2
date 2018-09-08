@@ -1,7 +1,8 @@
 # This file is app/controllers/movies_controller.rb
 class MoviesController < ApplicationController
   def index
-    @movies = Movie.all
+  	hash = {nil => "", "title_header" => "title ASC", "release_date_header" => "release_date ASC"}
+    @movies = Movie.order(hash[params[:id]])
   end
 
   def show
