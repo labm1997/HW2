@@ -1,8 +1,13 @@
 # This file is app/controllers/movies_controller.rb
 class MoviesController < ApplicationController
   def index
-  	hash = {nil => "", "title_header" => "title ASC", "release_date_header" => "release_date ASC"}
-    @movies = Movie.order(hash[params[:id]])
+    @all_ratings = Movie.all_ratings
+  	
+  	orderHash = {nil => "", "title_header" => "title ASC", "release_date_header" => "release_date ASC"}
+  	
+  	@selectedRatings = params[:ratings].class == ActionController::Parameters ? params[:ratings].keys : @all_ratings
+  	
+    @movies = Movie.where(:rating => @selectedRatings).order(orderHash[params[:id]])
   end
 
   def show
@@ -45,4 +50,5 @@ class MoviesController < ApplicationController
     flash[:notice] = "#{@movie.title} was deleted!"
     redirect_to movies_path
   end
+  
 end
