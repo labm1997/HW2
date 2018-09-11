@@ -5,10 +5,18 @@ class MoviesController < ApplicationController
   	
   	orderHash = {"title_header" => "title ASC", "release_date_header" => "release_date ASC"}
   	
-  	@order = orderHash[params[:id]] || session[:sort] || ""
+  	@order = orderHash[params[:id]] || session[:sort] || nil
   	
+    if(@order.nil?) then 
+      @order = ""
+      flash[:notice] = "Invalid order, redirected" 
+      flash.keep
+      redirect_to "/movies"
+    end
+  
   	ratings = params[:ratings].class == ActionController::Parameters ? params[:ratings].keys : nil
   	
+  	# Ratings can never be nil, since @all_ratings is not nil
   	@selectedRatings = ratings || session[:ratings] || @all_ratings
   	
     @movies = Movie.where(:rating => @selectedRatings).order(@order)

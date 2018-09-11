@@ -1,6 +1,11 @@
 -#  This file is app/views/movies/index.html.haml
+
+- flash.each do |n,m|
+  = m
+  
 %h1 All Movies
 
+= @order
 %table#movies
   %thead
     %tr
